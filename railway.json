@@ -1,6 +1,6 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "deploy": {
-    "startCommand": "gunicorn gst_project.wsgi"
+    "startCommand": "gunicorn gst_project.wsgi:application"
   }
 }

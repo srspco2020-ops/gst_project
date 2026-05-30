@@ -1,1 +1,1 @@
-web: gunicorn gst_project.wsgi
+web: gunicorn gst_project.wsgi:application
