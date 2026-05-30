@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com "></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DK+Loopet:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e8511;
+            --primary-dark: #315e48;
+            --primary-light: #e4f7e1;
+            --text-color: #2d2d2d;
+            --text-light: #5e6d55;
+            --bg-color: #f7f7f7;
+            --card-bg: #ffffff;
+            --error-color: #ff4d4d;
+            --success-color: #14a800;
+            --border-color: #e0e0e0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            z-index: 0;
+        }
+        
+        .register-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 440px;
+            padding: 2.5rem 3rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border-color);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin: 2rem auto;
+        }
+        
+        .register-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+        
+        .register-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--primary-dark));
+            background-color: var(--primary-color);
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .register-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .register-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .message {
+            background-color: var(--primary-light);
+            color: var(--text-color);
+            padding: 0.9rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.75rem;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .message.error {
+            background-color: #ffeeee;
+            border-left-color: var(--error-color);
+        }
+        
+        .message.success {
+            background-color: #e8f7eb;
+            border-left-color: var(--success-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.75rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: var(--bg-color);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(20, 168, 0, 0.15);
+            background-color: white;
+        }
+        
+        .form-group input::placeholder {
+            color: #a0a0a0;
+            font-weight: 400;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .register-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            margin-top: 0.5rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
+        }
+
+        .register-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .register-btn:active {
+            transform: translateY(1px) scale(0.98); /* Press down and shrink */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Softer shadow for press */
+        }
+        
+        .login-footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        .login-link {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-block;
+            margin-left: 5px;
+        }
+        
+        .login-link a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.75rem 0;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .divider::before {
+            margin-right: 1rem;
+        }
+        
+        .divider::after {
+            margin-left: 1rem;
+        }
+        
+        .nav-gradient {
+                background: linear-gradient(to right, #315e48, #1e8511);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: var(--shadow-md);
+        }
+        
+        .nav-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            body {
+                background-image: none;
+            }
+            
+            body::before {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading -->
+    <div id="preloader" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-opacity-50"></div>
+    </div>
+        <!-- Navigation Bar -->
+    <nav class="nav-gradient shadow-lg text-white">
+        <div class="nav-container">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-file-invoice text-white text-2xl"></i>
+                    <span class="font-bold text-3xl" style="font-family: 'Poetsen One', sans-serif;">Rekonix</span>
+                </div>
+              
+
+            </div>
+        </div>
+    </nav>
+    <main class="flex-grow flex items-center justify-center">
+        <div class="register-container animate__animated animate__fadeIn">
+            <div class="register-header">
+                <h2>Create Your Account</h2>
+                <p>Join our platform to access exclusive reonciliation dashboard</p>
+            </div>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message {% if 'success' in message.tags %}success{% elif 'error' in message.tags %}error{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Create a password">
+                    <span class="password-toggle" onclick="togglePassword('password')">Show</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+                    <span class="password-toggle" onclick="togglePassword('confirm_password')">Show</span>
+                </div>
+                
+                <button type="submit" class="register-btn">Register Now</button>
+            </form>
+            <div class="divider">or</div>
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const toggleBtn = field.nextElementSibling;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                field.type = 'password';
+                toggleBtn.textContent = 'Show';
+            }
+        }
+        
+        // Add animation to form elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s forwards`;
+                group.style.opacity = '0';
+            });
+        });
+        // Hide the preloader when the page has fully loaded
+        window.addEventListener("load", function () {
+          const preloader = document.getElementById("preloader");
+          if (preloader) {
+              preloader.style.opacity = '0';
+              preloader.style.transition = 'opacity 0.4s ease-out';
+              setTimeout(() => preloader.style.display = 'none', 400);
+          }
+        });
+    </script>
+
+</body>
+</html>

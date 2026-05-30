@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GSTIN Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playwrite+DK+Loopet:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet">
+
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    :root {
+      --primary-color: #1e8511;
+      --primary-dark: #315e48;
+      --primary-light: #e4f7e1;
+      --text-color: #2d2d2d;
+      --text-light: #5e6d55;
+      --bg-color: #f7f7f7;
+      --card-bg: #ffffff;
+      --border-color: #e0e0e0;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+    }
+
+    .nav-gradient {
+            background: linear-gradient(to right, #315e48, #1e8511);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+    }
+
+    .card-hover {
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent !important;
+      cursor: pointer; /* Makes it clear the card is clickable */
+      transform: translateY(0);
+      
+       /* Neutral position */
+    }
+
+    /* Hover effect - lift the card */
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-left-color: var(--primary-color) !important;
+    }
+
+    /* Press effect - simulate downward click */
+    .card-hover:active {
+      transform: translateY(5px); /* Move card down to simulate press */
+      box-shadow: var(--shadow-sm); /* Optional: reduce shadow on press */
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .gstin-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gstin-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(20, 168, 0, 0.03), rgba(20, 168, 0, 0.01));
+      z-index: 0;
+    }
+
+    .gstin-card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+
+
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Loading -->
+  <div id="preloader" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-opacity-50"></div>
+  </div>
+  <!-- Navigation Bar -->
+  <nav class="nav-gradient shadow-lg text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-file-invoice text-white text-2xl"></i>
+          <span class="font-bold text-3xl" style="font-family: 'Poetsen One', sans-serif;">Rekonix</span>
+
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-all">
+              <i class="fas fa-sign-out-alt text-sm"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="flex justify-end px-6 mt-2">
+    <p class="text-gray-600 text-sm sm:text-base">
+      👋 Hey there, <span class="font-semibold text-gray-800">{{ cp_name }}</span>!🚀
+    </p>
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 animate__animated animate__fadeIn">
+
+
+
+
+    <!-- GSTIN Cards -->
+    <div style="background-color: #e9f2e8; border-color: #e9f2e8;" class="rounded-2xl p-6 shadow-sm border">
+      <!-- Header Section -->
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900 relative inline-block">
+          List of GSTINs
+          <span style="background-color: #315e48; height: 4px; width: 60%; position: absolute; bottom: -6px; left: 0; border-radius: 2px;"></span>
+        </h1>
+      </div>
+      <div id="gstinContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for trader in traders %}
+          <a href="{% url 'gstin_detail' gstin=trader.gstin %}" class="group fade-in">
+            <div class="gstin-card bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 card-hover h-full">
+              <div class="gstin-card-content p-6">
+                <div class="flex items-start justify-between">
+                  <!-- Trader Info -->
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
+                      {{ trader.trader_name }}
+                    </h3>
+                    
+                    <div class="mt-4">
+                      <p class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-id-badge mr-2 text-green-500 w-5 text-center"></i>
+                        <span class="font-mono bg-gray-100 px-2 py-1 rounded">{{ trader.gstin }}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Action Icon -->
+                  <div class="bg-green-50 rounded-full p-2 transition-all group-hover:bg-green-100 group-hover:scale-110">
+                    <i class="fas fa-chevron-right text-green-600"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% empty %}
+          <div class="col-span-3 text-center py-16 bg-white rounded-xl shadow-sm border border-dashed border-gray-200">
+            <div class="mx-auto w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-6">
+              <i class="fas fa-folder-open text-green-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-medium text-gray-900">No GSTINs found</h3>
+            <p class="mt-2 text-gray-500 max-w-md mx-auto">No registered GSTINs are available at the moment.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Animation for cards
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.fade-in');
+      cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+      });
+    });
+    // Hide the preloader when the page has fully loaded
+    window.addEventListener("load", function () {
+      const preloader = document.getElementById("preloader");
+      if (preloader) {
+          preloader.style.opacity = '0';
+          preloader.style.transition = 'opacity 0.4s ease-out';
+          setTimeout(() => preloader.style.display = 'none', 400);
+      }
+    });
+  </script>
+</body>
+</html>

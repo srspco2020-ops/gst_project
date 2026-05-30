@@ -1,0 +1,1 @@
+web: gunicorn gst_project.wsgi

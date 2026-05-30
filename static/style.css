@@ -1,0 +1,201 @@
+:root {
+  --primary-color: #1e8511;
+  --primary-dark: #315e48;
+  --primary-light: #e4f7e1;
+  --text-color: #2d2d2d;
+  --text-light: #5e6d55;
+  --bg-color: #f7f7f7;
+  --card-bg: #ffffff;
+  --border-color: #e0e0e0;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+.nav-gradient {
+        background: linear-gradient(to right, #315e48, #1e8511);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-md);
+}
+
+.table-container {
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.table-container:hover {
+  box-shadow: var(--shadow-lg);
+  border-left-color: var(--primary-color);
+}
+
+.tab-button {
+  position: relative;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  color: var(--primary-color);
+}
+
+/* Underline animation */
+.tab-button::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--primary-color);
+  border-radius: 3px 3px 0 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease, background 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tab-button.active::after,
+.tab-button:hover::after {
+  transform: scaleX(1);
+}
+
+th {
+  position: relative;
+}
+
+th:hover {
+  background-color: var(--primary-light);
+}
+
+th::after {
+  content: '↕';
+  position: absolute;
+  right: 8px;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+.scroll-top-btn {
+  transition: all 0.3s ease;
+}
+
+.scroll-top-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+}
+
+
+/* Table header sorting indicators */
+th.sorted-asc::after {
+  content: " ↑";
+  color: #2563eb;
+}
+th.sorted-desc::after {
+  content: " ↓";
+  color: #2563eb;
+}
+
+/* Improved table container with vertical scrolling */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  margin-bottom: 1rem;
+  position: relative; /* This helps with positioning context */
+  max-height: 704px; /* Adjusted for approximately 15 rows at 44px height each */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+
+/* Base table styles */
+table {
+  border-collapse: collapse; /* Better for fixed column behavior */
+  width: 100%;
+  table-layout: auto; /* Allow columns to size naturally except for the first one */
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  word-wrap: break-word;
+  background-color: white; /* Background for all cells */
+}
+
+th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap; /* Keep this for other headers */
+}
+
+/* Fixed first column styles - improved */
+td:first-child,
+th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  width: 150px; /* Fixed width */
+  min-width: 150px;
+  max-width: 150px;
+  overflow: hidden;
+  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.15);
+  white-space: normal; /* Ensure text wraps */
+  word-wrap: break-word;
+}
+
+th:first-child:hover {
+  background-color: var(--primary-light);
+} 
+/* Make sure the first column header has correct background and stays visible */
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 20; /* Higher z-index to stay on top of everything */
+  background-color: #f3f4f6;
+}
+
+th:first-child {
+  background-color: #f3f4f6;
+  z-index: 10; /* Higher than regular cells to stay on top */
+  white-space: normal; /* Ensure header text wraps */
+  word-wrap: break-word;
+}
+
+
+
+/* Zebra rows for readability - fixed for sticky column */
+tbody tr:nth-child(even) td {
+  background-color: #f9fafb;
+}
+tbody tr:nth-child(even) td:first-child {
+  background-color: #f9fafb;
+}
+
+
+
+tr:hover td {
+  background-color: var(--primary-light);
+}
+/* Make sure the first column shows hover effect properly */
+tr:hover td:first-child {
+  background-color: var(--primary-light);
+}
+
+

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Public GSTIN Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playwrite+DK+Loopet:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet"> 
+  <script src="https://cdn.tailwindcss.com "></script>
+  <style>
+    :root {
+      --primary-color: #1e8511;
+
+    }
+    .nav-gradient {
+            background: linear-gradient(to right, #315e48, #1e8511);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+    }
+    /* Ensure the table container supports sticky headers */
+    .max-h-96 {
+      position: relative;
+    }
+
+    /* Make table headers sticky */
+    th.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #f3f4f6; /* Match bg-gray-100 */
+    }
+
+    /* Ensure table layout supports scrolling */
+    table {
+      width: 100%;
+      table-layout: auto;
+    }
+
+    /* Optional: Fix horizontal scrolling issues */
+    .overflow-y-auto {
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    th.sticky.left-0 {
+    z-index: 20; /* Higher than other sticky headers */
+    }
+    td.sticky.left-0 {
+      z-index: 10; /* Above table body but below headers */
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 nav-gradient shadow-lg text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-file-invoice text-white text-2xl"></i>
+          <span class="font-bold text-3xl" style="font-family: 'Poetsen One', sans-serif;">Rekonix</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto p-6 space-y-8">
+
+    <!-- GSTIN Info -->
+    <p class="text-sm text-gray-600">Viewing data for GSTIN: <strong id="gstinDisplay">{{ trader }}</strong></p>
+
+    <!-- Tabs -->
+    <div class="border-b border-gray-300">
+      <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="tabs">
+        <li class="mr-2">
+          <a href="#invoices" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-green-600 hover:border-green-300 active-tab">Invoices</a>
+        </li>
+        <li class="mr-2">
+          <a href="#credit_notes" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-green-600 hover:border-green-300">Credit Notes</a>
+        </li>
+        <li class="mr-2">
+          <a href="#debit_notes" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-green-600 hover:border-green-300">Debit Notes</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Tab Content -->
+
+    <!-- Invoices Tab -->
+    <div id="invoices" class="tab-content">
+      <div class="mb-4 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Portal & Books Invoices</h2>
+      </div>
+
+      <!-- Portal Invoices -->
+      <div id="p_invoiceTable" class="mb-8">
+        <h3 class="text-md font-medium mb-2 text-green-700">Portal Invoices</h3>
+
+        <!-- Scrollable Container -->
+        <div class="max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+          <table class="min-w-full bg-white text-sm">
+            <thead class="bg-gray-100">
+              <tr class="text-left text-gray-700 uppercase text-xs">
+                <th class="px-4 py-3 border-b sticky top-0 left-0 bg-gray-100 z-20">Supplier Trade Name</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Supplier GSTIN</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Document Number</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Document Date</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Total Taxable Value</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">IGST Amount</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">CS_GST Amount</th>
+              </tr>
+            </thead>
+            <tbody id="p_invoiceBody">
+              {% for invoice in p_invoices %}
+              <tr class="hover:bg-green-50 transition duration-100">
+                <td class="border px-4 py-2 sticky left-0 bg-white z-10">{{ invoice.supplier_trade_name }}</td>
+                <td class="border px-4 py-2">{{ invoice.supplier_gstin }}</td>
+                <td class="border px-4 py-2">{{ invoice.document_number }}</td>
+                <td class="border px-4 py-2">{{ invoice.document_date|date:"Y-m-d" }}</td>
+                <td class="border px-4 py-2 text-right">{{ invoice.total_taxable_value }}</td>
+                <td class="border px-4 py-2 text-right">{{ invoice.igst_amount }}</td>
+                <td class="border px-4 py-2 text-right">{{ invoice.cs_gst_amount }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center border px-4 py-2">No records found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Books Invoices -->
+      <div id="b_invoiceTable" class="mb-8">
+        <h3 class="text-md font-medium mb-2 text-green-700">Books of Account Invoices</h3>
+
+        <!-- Scrollable Container -->
+        <div class="max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+          <table class="min-w-full bg-white text-sm">
+            <thead class="bg-gray-100">
+              <tr class="text-left text-gray-700 uppercase text-xs">
+                <th class="px-4 py-3 border-b sticky top-0 left-0 bg-gray-100 z-20">Supplier Trade Name</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Supplier GSTIN</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Invoice Number</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Invoice Date</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Taxable Value</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Integrated Tax Paid</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Central/State Tax Paid</th>
+              </tr>
+            </thead>
+            <tbody id="b_invoiceBody">
+              {% for invoice in b_invoices %}
+              <tr class="hover:bg-green-50 transition duration-100">
+                <td class="border px-4 py-2 sticky left-0 bg-white z-10">{{ invoice.supplier_trade_name }}</td>
+                <td class="border px-4 py-2">{{ invoice.gstin_of_supplier }}</td>
+                <td class="border px-4 py-2">{{ invoice.invoice_number }}</td>
+                <td class="border px-4 py-2">{{ invoice.invoice_date|date:"Y-m-d" }}</td>
+                <td class="border px-4 py-2 text-right">{{ invoice.taxable_value }}</td>
+                <td class="border px-4 py-2 text-right">{{ invoice.integrated_tax_paid }}</td>
+                <td class="border px-4 py-2 text-right">{{ invoice.centralstate_tax_paid }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center border px-4 py-2">No records found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Credit Note Tab -->
+    <div id="credit_notes" class="tab-content hidden">
+      <div class="mb-4 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Portal & Books Credit Note</h2>
+      </div>
+
+      <!-- Portal Credit_Note -->
+      <div id="p_credit_note" class="mb-8">
+        <h3 class="text-md font-medium mb-2 text-green-700">Portal Credit Note</h3>
+
+        <!-- Scrollable Container -->
+        <div class="max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+          <table class="min-w-full bg-white text-sm">
+            <thead class="bg-gray-100">
+              <tr class="text-left text-gray-700 uppercase text-xs">
+                <th class="px-4 py-3 border-b sticky top-0 left-0 bg-gray-100 z-20">Supplier Trade Name</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Supplier GSTIN</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Document Number</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Document Date</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Total Taxable Value</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">IGST Amount</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">CS_GST Amount</th>
+              </tr>
+            </thead>
+            <tbody id="p_cnBody">
+              {% for cn in p_credit_notes %}
+              <tr class="hover:bg-green-50 transition duration-100">
+                <td class="border px-4 py-2 sticky left-0 bg-white z-10">{{  cn.supplier_trade_name }}</td>
+                <td class="border px-4 py-2">{{  cn.supplier_gstin }}</td>
+                <td class="border px-4 py-2">{{  cn.document_number }}</td>
+                <td class="border px-4 py-2">{{  cn.document_date|date:"Y-m-d" }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.total_taxable_value }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.igst_amount }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.cs_gst_amount }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center border px-4 py-2">No records found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Books Credit_Note -->
+      <div id="b_credit_note" class="mb-8">
+        <h3 class="text-md font-medium mb-2 text-green-700">Books Credit Note</h3>
+
+        <!-- Scrollable Container -->
+        <div class="max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+          <table class="min-w-full bg-white text-sm">
+            <thead class="bg-gray-100">
+              <tr class="text-left text-gray-700 uppercase text-xs">
+                <th class="px-4 py-3 border-b sticky top-0 left-0 bg-gray-100 z-20">Supplier Trade Name</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Supplier GSTIN</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Invoice Number</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Invoice Date</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Taxable Value</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Integrated Tax Paid</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Central/State Tax Paid</th>
+              </tr>
+            </thead>
+            <tbody id="b_cnBody">
+              {% for cn in b_credit_notes %}
+              <tr class="hover:bg-green-50 transition duration-100">
+                <td class="border px-4 py-2 sticky left-0 bg-white z-10">{{  cn.supplier_trade_name }}</td>
+                <td class="border px-4 py-2">{{  cn.gstin_of_supplier }}</td>
+                <td class="border px-4 py-2">{{  cn.invoice_number }}</td>
+                <td class="border px-4 py-2">{{  cn.invoice_date|date:"Y-m-d" }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.taxable_value }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.integrated_tax_paid }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.centralstate_tax_paid }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center border px-4 py-2">No records found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Debit Note Tab -->
+    <div id="debit_notes" class="tab-content hidden">
+      <div class="mb-4 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Portal & Books Debit Note</h2>
+      </div>
+
+      <!-- Portal Debit_Note -->
+      <div id="p_debit_note" class="mb-8">
+        <h3 class="text-md font-medium mb-2 text-green-700">Portal Debit Note</h3>
+
+        <!-- Scrollable Container -->
+        <div class="max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+          <table class="min-w-full bg-white text-sm">
+            <thead class="bg-gray-100">
+              <tr class="text-left text-gray-700 uppercase text-xs">
+                <th class="px-4 py-3 border-b sticky top-0 left-0 bg-gray-100 z-20">Supplier Trade Name</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Supplier GSTIN</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Document Number</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Document Date</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Total Taxable Value</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">IGST Amount</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">CS_GST Amount</th>
+              </tr>
+            </thead>
+            <tbody id="p_cnBody">
+              {% for cn in p_debit_notes %}
+              <tr class="hover:bg-green-50 transition duration-100">
+                <td class="border px-4 py-2 sticky left-0 bg-white z-10">{{  cn.supplier_trade_name }}</td>
+                <td class="border px-4 py-2">{{  cn.supplier_gstin }}</td>
+                <td class="border px-4 py-2">{{  cn.document_number }}</td>
+                <td class="border px-4 py-2">{{  cn.document_date|date:"Y-m-d" }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.total_taxable_value }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.igst_amount }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.cs_gst_amount }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center border px-4 py-2">No records found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Books Debit_Note -->
+      <div id="b_debit_note" class="mb-8">
+        <h3 class="text-md font-medium mb-2 text-green-700">Books Debit Note</h3>
+
+        <!-- Scrollable Container -->
+        <div class="max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+          <table class="min-w-full bg-white text-sm">
+            <thead class="bg-gray-100">
+              <tr class="text-left text-gray-700 uppercase text-xs">
+                <th class="px-4 py-3 border-b sticky top-0 left-0 bg-gray-100 z-20">Supplier Trade Name</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Supplier GSTIN</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Invoice Number</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Invoice Date</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Taxable Value</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Integrated Tax Paid</th>
+                <th class="px-4 py-3 border-b sticky top-0 bg-gray-100 z-10">Central/State Tax Paid</th>
+              </tr>
+            </thead>
+            <tbody id="b_cnBody">
+              {% for cn in b_debit_notes %}
+              <tr class="hover:bg-green-50 transition duration-100">
+                <td class="border px-4 py-2 sticky left-0 bg-white z-10">{{  cn.supplier_trade_name }}</td>
+                <td class="border px-4 py-2">{{  cn.gstin_of_supplier }}</td>
+                <td class="border px-4 py-2">{{  cn.invoice_number }}</td>
+                <td class="border px-4 py-2">{{  cn.invoice_date|date:"Y-m-d" }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.taxable_value }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.integrated_tax_paid }}</td>
+                <td class="border px-4 py-2 text-right">{{  cn.centralstate_tax_paid }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center border px-4 py-2">No records found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Input for GSTIN -->
+    <input type="hidden" id="current-gstin" value="27ABCDE1234A1Z5" />
+
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    // Tab Switching
+    document.querySelectorAll("#tabs a").forEach(link => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href").substring(1);
+        document.querySelectorAll(".tab-content").forEach(tab => {
+          tab.classList.add("hidden");
+        });
+        document.getElementById(targetId).classList.remove("hidden");
+        document.querySelectorAll("#tabs a").forEach(a => {
+          a.classList.remove("active-tab");
+        });
+        this.classList.add("active-tab");
+      });
+    });
+
+    // Filter Table
+    function filterTable(containerId, inputId) {
+      const input = document.getElementById(inputId);
+      const filter = input.value.toLowerCase();
+      const container = document.getElementById(containerId);
+      const rows = container.querySelectorAll("tbody tr");
+
+      rows.forEach(row => {
+        const firstColText = row.querySelector("td")?.textContent.toLowerCase() || '';
+        row.style.display = firstColText.includes(filter) ? '' : 'none';
+      });
+    }
+
+    // Get Active Tab ID
+    function getActiveTabId() {
+      const tabs = document.querySelectorAll(".tab-content");
+      for (let tab of tabs) {
+        if (!tab.classList.contains("hidden")) {
+          return tab.id;
+        }
+      }
+      return "invoices";
+    }
+
+    // Get All Search Queries
+    function getAllSearchQueries() {
+      const inputs = document.querySelectorAll("input[id$='_searchInput']");
+      const queries = [];
+      inputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) queries.push(val);
+      });
+      return [...new Set(queries)];
+    }
+
+
+  </script>
+
+</body>
+</html>

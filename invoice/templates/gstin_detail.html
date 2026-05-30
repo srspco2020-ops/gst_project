@@ -1,0 +1,384 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GSTIN Details - {{trader}} - {{ gstin }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playwrite+DK+Loopet:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <style>
+
+  </style>
+</head>
+<body class="bg-gray-50">
+  <button id="scrollButton" class="fixed bottom-5 right-5 bg-green-600 text-white border-none rounded-full w-12 h-12 cursor-pointer text-lg flex items-center justify-center shadow-lg scroll-top-btn z-[1000] hover:bg-green-700" title="Scroll to Top">↑</button>
+  
+  <input type="hidden" id="current-gstin" value="{{ gstin }}">
+
+  <!-- Navigation Bar -->
+  <nav class="sticky top-0 z-50 nav-gradient shadow-lg text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-file-invoice text-white text-2xl"></i>
+          <span class="font-bold text-3xl" style="font-family: 'Poetsen One', sans-serif;">Rekonix</span>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+   
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-all">
+              <i class="fas fa-sign-out-alt text-sm"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 animate__animated animate__fadeIn">
+    <!-- Header Section -->
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">{{ trader }}</h1>
+        <p class="text-gray-600 mt-1 font-mono">{{ gstin }}</p>
+      </div>
+      
+      <!-- Back Button -->
+      <a href="/gstin_list" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i> Back
+      </a>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="flex space-x-6 mb-6 border-b border-gray-200">
+      <button onclick="showTab('invoices')" class="tab-button font-medium">Invoices</button>
+      <button onclick="showTab('credit_notes')" class="tab-button">Credit Notes</button>
+      <button onclick="showTab('debit_notes')" class="tab-button">Debit Notes</button>
+    </div>
+
+    <!-- Invoices Tab -->
+    <div id="invoices" class="tab-content">
+      <!-- PORTAL INVOICES SECTION -->
+      <div class="mb-10">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+          <h2 class="text-xl font-semibold text-gray-900">ONLY IN PORTAL - INVOICES</h2>
+          <div class="flex gap-3">
+            <input id="p_searchInput" type="text" placeholder="Search portal invoices..."
+                   class="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm">
+            <button onclick="shareFilteredData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors whitespace-nowrap">
+              <i class="fab fa-whatsapp mr-2"></i> Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="table-scroll">
+            <table id="p_invoiceTable" class="min-w-full divide-y divide-gray-200 text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th onclick="sortTable('p_invoiceTable', 0)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier Trade Name</th>
+                  <th onclick="sortTable('p_invoiceTable', 1)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier GSTIN</th>
+                  <th onclick="sortTable('p_invoiceTable', 2)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Document Number</th>
+                  <th onclick="sortTable('p_invoiceTable', 3)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Document Date</th>
+                  <th onclick="sortTable('p_invoiceTable', 4)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Taxable Value</th>
+                  <th onclick="sortTable('p_invoiceTable', 5)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">IGST Amount</th>
+                  <th onclick="sortTable('p_invoiceTable', 6)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">CS_GST Amount</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                {% for invoice in p_invoices %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="py-3 px-4">{{ invoice.supplier_trade_name }}</td>
+                  <td class="py-3 px-4 font-mono">{{ invoice.supplier_gstin }}</td>
+                  <td class="py-3 px-4">{{ invoice.document_number }}</td>
+                  <td class="py-3 px-4">{{ invoice.document_date|date:"Y-m-d" }}</td>
+                  <td class="py-3 px-4">{{ invoice.total_taxable_value }}</td>
+                  <td class="py-3 px-4">{{ invoice.igst_amount }}</td>
+                  <td class="py-3 px-4">{{ invoice.cs_gst_amount }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="py-4 px-4 text-center text-gray-500">No unreconciled Invoices.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKS OF ACCOUNT INVOICES SECTION -->
+      <div class="mb-10">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h2 class="text-xl font-semibold text-gray-900">ONLY IN BOOK - INVOICES</h2>
+          <div class="flex gap-3">
+            <input id="b_searchInput" type="text" placeholder="Search portal invoices..."
+                   class="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm">
+            <button onclick="shareFilteredData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors whitespace-nowrap">
+              <i class="fab fa-whatsapp mr-2"></i> Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="table-scroll">
+            <table id="b_invoiceTable" class="min-w-full divide-y divide-gray-200 text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th onclick="sortTable('b_invoiceTable', 0)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier Trade Name</th>
+                  <th onclick="sortTable('b_invoiceTable', 1)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier GSTIN</th>
+                  <th onclick="sortTable('b_invoiceTable', 2)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Invoice Number</th>
+                  <th onclick="sortTable('b_invoiceTable', 3)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Invoice Date</th>
+                  <th onclick="sortTable('b_invoiceTable', 4)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Taxable Value</th>
+                  <th onclick="sortTable('b_invoiceTable', 5)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Integrated Tax Paid</th>
+                  <th onclick="sortTable('b_invoiceTable', 6)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Central/State Tax Paid</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                {% for invoice in b_invoices %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="py-3 px-4">{{ invoice.supplier_trade_name }}</td>
+                  <td class="py-3 px-4 font-mono">{{ invoice.gstin_of_supplier }}</td>
+                  <td class="py-3 px-4">{{ invoice.invoice_number }}</td>
+                  <td class="py-3 px-4">{{ invoice.invoice_date|date:"Y-m-d" }}</td>
+                  <td class="py-3 px-4">{{ invoice.taxable_value }}</td>
+                  <td class="py-3 px-4">{{ invoice.integrated_tax_paid }}</td>
+                  <td class="py-3 px-4">{{ invoice.centralstate_tax_paid }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="py-4 px-4 text-center text-gray-500">No unreconciled Invoices.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Credit Notes Tab -->
+    <div id="credit_notes" class="tab-content hidden">
+      <!-- PORTAL CREDIT NOTES SECTION -->
+      <div class="mb-10">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h2 class="text-xl font-semibold text-gray-900">ONLY IN PORTAL - CREDIT NOTES</h2>
+          <div class="flex gap-3">
+            <input id="cn_p_searchInput" type="text" placeholder="Search portal invoices..."
+                   class="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm">
+            <button onclick="shareFilteredData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors whitespace-nowrap">
+              <i class="fab fa-whatsapp mr-2"></i> Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="table-scroll">
+            <table id="p_cnTable" class="min-w-full divide-y divide-gray-200 text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th onclick="sortTable('p_cnTable', 0)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier Trade Name</th>
+                  <th onclick="sortTable('p_cnTable', 1)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier GSTIN</th>
+                  <th onclick="sortTable('p_cnTable', 2)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Document Number</th>
+                  <th onclick="sortTable('p_cnTable', 3)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Document Date</th>
+                  <th onclick="sortTable('p_cnTable', 4)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Taxable Value</th>
+                  <th onclick="sortTable('p_cnTable', 5)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">IGST Amount</th>
+                  <th onclick="sortTable('p_cnTable', 6)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">CS_GST Amount</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                {% for cn in p_credit_notes %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="py-3 px-4">{{ cn.supplier_trade_name }}</td>
+                  <td class="py-3 px-4 font-mono">{{ cn.supplier_gstin }}</td>
+                  <td class="py-3 px-4">{{ cn.document_number }}</td>
+                  <td class="py-3 px-4">{{ cn.document_date|date:"Y-m-d" }}</td>
+                  <td class="py-3 px-4">{{ cn.total_taxable_value }}</td>
+                  <td class="py-3 px-4">{{ cn.igst_amount }}</td>
+                  <td class="py-3 px-4">{{ cn.cs_gst_amount }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="py-4 px-4 text-center text-gray-500">No unreconciled credit notes found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKS OF ACCOUNT CREDIT NOTES SECTION -->
+      <div class="mb-10">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h2 class="text-xl font-semibold text-gray-900">ONLY IN BOOKS OF ACCOUNT - CREDIT NOTES</h2>
+          <div class="flex gap-3">
+            <input id="cn_b_searchInput" type="text" placeholder="Search portal invoices..."
+                   class="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm">
+            <button onclick="shareFilteredData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors whitespace-nowrap">
+              <i class="fab fa-whatsapp mr-2"></i> Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="table-scroll">
+            <table id="b_cnTable" class="min-w-full divide-y divide-gray-200 text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th onclick="sortTable('b_cnTable', 0)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier Trade Name</th>
+                  <th onclick="sortTable('b_cnTable', 1)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier GSTIN</th>
+                  <th onclick="sortTable('b_cnTable', 2)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Note/Refund Voucher Number</th>
+                  <th onclick="sortTable('b_cnTable', 3)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Note/Refund Voucher Date</th>
+                  <th onclick="sortTable('b_cnTable', 4)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Taxable Value</th>
+                  <th onclick="sortTable('b_cnTable', 5)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Integrated Tax Paid</th>
+                  <th onclick="sortTable('b_cnTable', 6)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Central/State Tax Paid</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                {% for cn in b_credit_notes %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="py-3 px-4">{{ cn.supplier_trade_name }}</td>
+                  <td class="py-3 px-4 font-mono">{{ cn.gstin_of_supplier }}</td>
+                  <td class="py-3 px-4">{{ cn.invoice_number }}</td>
+                  <td class="py-3 px-4">{{ cn.invoice_date|date:"Y-m-d" }}</td>
+                  <td class="py-3 px-4">{{ cn.taxable_value }}</td>
+                  <td class="py-3 px-4">{{ cn.integrated_tax_paid }}</td>
+                  <td class="py-3 px-4">{{ cn.centralstate_tax_paid }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="py-4 px-4 text-center text-gray-500">No unreconciled credit notes found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Debit Notes Tab -->
+    <div id="debit_notes" class="tab-content hidden">
+      <!-- PORTAL DEBIT NOTES SECTION -->
+      <div class="mb-10">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h2 class="text-xl font-semibold text-gray-900">ONLY IN PORTAL - DEBIT NOTES</h2>
+          <div class="flex gap-3">
+            <input id="dn_p_searchInput" type="text" placeholder="Search portal invoices..."
+                   class="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm">
+            <button onclick="shareFilteredData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors whitespace-nowrap">
+              <i class="fab fa-whatsapp mr-2"></i> Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="table-scroll">
+            <table id="p_dnTable" class="min-w-full divide-y divide-gray-200 text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th onclick="sortTable('p_dnTable', 0)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier Trade Name</th>
+                  <th onclick="sortTable('p_dnTable', 1)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier GSTIN</th>
+                  <th onclick="sortTable('p_dnTable', 2)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Document Number</th>
+                  <th onclick="sortTable('p_dnTable', 3)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Document Date</th>
+                  <th onclick="sortTable('p_dnTable', 4)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Taxable Value</th>
+                  <th onclick="sortTable('p_dnTable', 5)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">IGST Amount</th>
+                  <th onclick="sortTable('p_dnTable', 6)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">CS_GST Amount</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                {% for dn in p_debit_notes %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="py-3 px-4">{{ dn.supplier_trade_name }}</td>
+                  <td class="py-3 px-4 font-mono">{{ dn.supplier_gstin }}</td>
+                  <td class="py-3 px-4">{{ dn.document_number }}</td>
+                  <td class="py-3 px-4">{{ dn.document_date|date:"Y-m-d" }}</td>
+                  <td class="py-3 px-4">{{ dn.total_taxable_value }}</td>
+                  <td class="py-3 px-4">{{ dn.igst_amount }}</td>
+                  <td class="py-3 px-4">{{ dn.cs_gst_amount }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="py-4 px-4 text-center text-gray-500">No unreconciled debit notes found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKS OF ACCOUNT DEBIT NOTES SECTION -->
+      <div class="mb-10">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h2 class="text-xl font-semibold text-gray-900">ONLY IN BOOKS OF ACCOUNT - DEBIT NOTES</h2>
+          <div class="flex gap-3">
+            <input id="dn_b_searchInput" type="text" placeholder="Search portal invoices..."
+                   class="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm">
+            <button onclick="shareFilteredData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors whitespace-nowrap">
+              <i class="fab fa-whatsapp mr-2"></i> Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="table-scroll">
+            <table id="b_dnTable" class="min-w-full divide-y divide-gray-200 text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th onclick="sortTable('b_dnTable', 0)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier Trade Name</th>
+                  <th onclick="sortTable('b_dnTable', 1)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Supplier GSTIN</th>
+                  <th onclick="sortTable('b_dnTable', 2)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Note/Refund Voucher Number</th>
+                  <th onclick="sortTable('b_dnTable', 3)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Note/Refund Voucher Date</th>
+                  <th onclick="sortTable('b_dnTable', 4)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Taxable Value</th>
+                  <th onclick="sortTable('b_dnTable', 5)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Integrated Tax Paid</th>
+                  <th onclick="sortTable('b_dnTable', 6)" class="py-3 px-4 text-left font-medium text-gray-700 cursor-pointer">Central/State Tax Paid</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                {% for dn in b_debit_notes %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="py-3 px-4">{{ dn.supplier_trade_name }}</td>
+                  <td class="py-3 px-4 font-mono">{{ dn.gstin_of_supplier }}</td>
+                  <td class="py-3 px-4">{{ dn.invoice_number }}</td>
+                  <td class="py-3 px-4">{{ dn.invoice_date|date:"Y-m-d" }}</td>
+                  <td class="py-3 px-4">{{ dn.taxable_value }}</td>
+                  <td class="py-3 px-4">{{ dn.integrated_tax_paid }}</td>
+                  <td class="py-3 px-4">{{ dn.centralstate_tax_paid }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="py-4 px-4 text-center text-gray-500">No unreconciled debit notes found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- JavaScript -->
+  <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

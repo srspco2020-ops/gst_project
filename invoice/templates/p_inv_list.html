@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Purchase Invoices - {{ gstin }}{% endblock %}
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-6">Purchase Invoices (P) - {{ gstin }}</h1>
+<!-- Back Button -->
+<a href="javascript:history.back()" 
+   class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800 transition duration-200">
+  ← Back
+</a>
+
+<!-- Search and Filter Controls -->
+<div class="mb-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+  <input id="searchInput" type="text" placeholder="Search by Supplier Name or Document Number..."
+         class="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-1/2">
+  <button id="sendToWhatsAppBtn"
+        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-200">
+  Send to WhatsApp
+  </button>
+
+</div>
+
+
+
+<!-- Table Container -->
+<div class="table-container bg-white rounded-lg shadow">
+  <table id="invoiceTable" class="border-collapse w-full text-sm">
+    <thead>
+      <tr class="bg-gray-200 text-left text-gray-700 uppercase text-xs">
+        <th class="py-3 px-4 min-w-40 cursor-pointer frozen-header" onclick="sortTable(0)">Supplier Trade Name</th>
+        <th class="py-3 px-4 min-w-32 cursor-pointer" onclick="sortTable(1)">Supplier GSTIN</th>
+        <th class="py-3 px-4 min-w-32 cursor-pointer" onclick="sortTable(2)">Document Number</th>
+        <th class="py-3 px-4 min-w-28 cursor-pointer" onclick="sortTable(3)">Document Date</th>
+        <th class="py-3 px-4 min-w-32 cursor-pointer" onclick="sortTable(4)">Total Taxable Value</th>
+        <th class="py-3 px-4 min-w-28 cursor-pointer" onclick="sortTable(5)">IGST Amount</th>
+        <th class="py-3 px-4 min-w-28 cursor-pointer" onclick="sortTable(6)">CS_GST Amount</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody" class="divide-y divide-gray-200">
+      {% for invoice in invoices %}
+      <tr class="hover:bg-blue-50 transition duration-100">
+        <td class="py-3 px-4 frozen-col">{{ invoice.supplier_trade_name }}</td>
+        <td class="py-3 px-4">{{ invoice.supplier_gstin }}</td>
+        <td class="py-3 px-4">{{ invoice.document_number }}</td>
+        <td class="py-3 px-4">{{ invoice.document_date|date:"Y-m-d" }}</td>
+        <td class="py-3 px-4">{{ invoice.total_taxable_value }}</td>
+        <td class="py-3 px-4">{{ invoice.igst_amount }}</td>
+        <td class="py-3 px-4">{{ invoice.cs_gst_amount }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/script.js"></script>
+
+{% endblock %}
