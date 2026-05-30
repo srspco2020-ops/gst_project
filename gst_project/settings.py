@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'gst_project.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:password@localhost:5432/gst_database'
+        default=os.getenv("DATABASE_URL")
     )
 }
 
