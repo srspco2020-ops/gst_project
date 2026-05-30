@@ -84,15 +84,7 @@ WSGI_APPLICATION = 'gst_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600
-    )
-}
-
-
-
+# Database
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
@@ -101,8 +93,6 @@ if DATABASE_URL:
     }
 else:
     raise Exception("DATABASE_URL environment variable is not set!")
-
-print("DATABASE_URL =", os.environ.get('DATABASE_URL', 'NOT SET'))
 
 
 
