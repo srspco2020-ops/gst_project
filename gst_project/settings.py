@@ -142,3 +142,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'invoice.CustomUser'
+
+# Session settings - keep session active forever
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365 * 10  # 10 years in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False          # Don't expire when browser closes
+SESSION_SAVE_EVERY_REQUEST = True                # Refresh session on every request
