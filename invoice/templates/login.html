@@ -131,6 +131,7 @@
             border-left-color: var(--success-color);
         }
         
+        /* ── Form group ── */
         .form-group {
             margin-bottom: 1.75rem;
             position: relative;
@@ -143,15 +144,38 @@
             font-size: 0.95rem;
             color: var(--text-color);
         }
+
+        /* Input with left icon */
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
         
         .form-group input {
             width: 100%;
-            padding: 1rem;
+            padding: 1rem 1rem 1rem 2.75rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
             background-color: var(--bg-color);
+        }
+
+        /* Tint the icon when its sibling input is focused */
+        .form-group input:focus ~ .input-icon,
+        .input-wrapper:focus-within .input-icon {
+            color: var(--primary-color);
         }
         
         .form-group input:focus {
@@ -165,17 +189,67 @@
             color: #a0a0a0;
             font-weight: 400;
         }
+
+        /* Inline field error */
+        .field-error {
+            display: none;
+            font-size: 0.8rem;
+            color: var(--error-color);
+            margin-top: 0.4rem;
+            padding-left: 0.25rem;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .field-error.visible {
+            display: block;
+        }
+
+        .form-group input.invalid {
+            border-color: var(--error-color);
+            box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.12);
+        }
+        
+        /* Password wrapper */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        #password {
+            padding-left: 2.75rem;
+            padding-right: 2.75rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
         
         .password-toggle {
             position: absolute;
-            right: 15px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
+            background: none;
+            border: none;
             cursor: pointer;
             color: var(--text-light);
             font-size: 0.9rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: color 0.2s ease, background 0.2s ease;
+            display: flex;
+            align-items: center;
         }
-        
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .password-toggle:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* ── Sign In button ── */
         .login-btn {
             background-color: var(--primary-color);
             color: white;
@@ -189,28 +263,70 @@
             transition: all 0.15s ease-in-out;
             margin-top: 0.5rem;
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-btn:hover {
+        .login-btn:hover:not(:disabled) {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .login-btn:active {
-            transform: translateY(1px) scale(0.98); /* Press down and shrink a bit */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Lower shadow for pressed look */
+        .login-btn:active:not(:disabled) {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
-        
+
+        .login-btn:disabled {
+            background-color: var(--primary-dark);
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        /* Ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0);
+            animation: ripple-anim 0.55s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Spinner inside button */
+        .btn-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.65s linear infinite;
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .login-btn.loading .btn-spinner { display: block; }
+        .login-btn.loading .btn-label  { opacity: 0.85; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Footer / divider ── */
         .login-footer {
             margin-top: 2.5rem;
             text-align: center;
             font-size: 0.95rem;
             color: var(--text-light);
         }
-
-
         
         .login-link {
             color: var(--primary-color);
@@ -240,20 +356,16 @@
             border-bottom: 1px solid var(--border-color);
         }
         
-        .divider::before {
-            margin-right: 1rem;
-        }
+        .divider::before { margin-right: 1rem; }
+        .divider::after  { margin-left: 1rem; }
         
-        .divider::after {
-            margin-left: 1rem;
-        }
-        
+        /* ── Nav (untouched) ── */
         .nav-gradient {
-                background: linear-gradient(to right, #315e48, #1e8511);
-                position: sticky;
-                top: 0;
-                z-index: 100;
-                box-shadow: var(--shadow-md);
+            background: linear-gradient(to right, #315e48, #1e8511);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
         }
         
         .nav-container {
@@ -261,34 +373,10 @@
             margin: 0 auto;
             padding: 0 1rem;
         }
-
-        .password-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        
-        #password {
-            padding-right: 30px; /* Make space for the icon */
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #777;
-        }
-        
-        .password-toggle:hover {
-            color: #333;
-        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
         
         @media (max-width: 480px) {
@@ -296,11 +384,9 @@
                 padding: 2rem 1.5rem;
                 margin: 1rem;
             }
-            
             body {
                 background-image: none;
             }
-            
             body::before {
                 background: white;
             }
@@ -312,7 +398,8 @@
     <div id="preloader" class="fixed inset-0 flex items-center justify-center bg-white z-50">
         <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-opacity-50"></div>
     </div>
-    <!-- Navigation Bar -->
+
+    <!-- Navigation Bar (untouched) -->
     <nav class="nav-gradient shadow-lg text-white">
         <div class="nav-container">
             <div class="flex justify-between h-16 items-center">
@@ -320,10 +407,8 @@
                     <i class="fas fa-file-invoice text-white text-2xl"></i>
                     <span class="font-bold text-3xl" style="font-family: 'Poetsen One', sans-serif;">Rekonix</span>
                 </div>
-                
                 <div class="flex items-center space-x-4">
                     <span class="text-sm">{{ cp_name }}</span>
-
                 </div>
             </div>
         </div>
@@ -348,24 +433,52 @@
                 {% endfor %}
             {% endif %}
             
-            <form method="post">
+            <form method="post" id="loginForm" novalidate>
                 {% csrf_token %}
+
+                <!-- Mobile -->
                 <div class="form-group">
                     <label for="mobile">Mobile Number</label>
-                    <input type="tel" id="mobile" name="mobile" required placeholder="Enter your registered mobile">
+                    <div class="input-wrapper">
+                        <input
+                            type="tel"
+                            id="mobile"
+                            name="mobile"
+                            required
+                            inputmode="numeric"
+                            maxlength="10"
+                            pattern="[0-9]{10}"
+                            placeholder="Enter your registered mobile"
+                            autofocus
+                        >
+                        <i class="fa-solid fa-phone input-icon" aria-hidden="true"></i>
+                    </div>
+                    <span class="field-error" id="mobileError">Please enter a valid 10-digit mobile number.</span>
                 </div>
                 
+                <!-- Password -->
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
+                        <i class="fa-solid fa-lock input-icon" aria-hidden="true" style="left:14px; z-index:1;"></i>
                         <input type="password" id="password" name="password" required placeholder="Enter your password">
-                        <span class="password-toggle" onclick="togglePassword()">
-                            <i class="fa-solid fa-eye" id="toggleIcon" ></i>
-                        </span>
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="toggleBtn"
+                            onclick="togglePassword()"
+                            aria-label="Show password"
+                        >
+                            <i class="fa-solid fa-eye" id="toggleIcon"></i>
+                        </button>
                     </div>
+                    <span class="field-error" id="passwordError">Password cannot be empty.</span>
                 </div>
                 
-                <button type="submit" class="login-btn">Sign In</button>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
+                    <span class="btn-label" id="btnLabel">Sign In</span>
+                </button>
             </form>
 
             <div class="divider">or</div>
@@ -377,37 +490,103 @@
     </main>
     
     <script>
+        /* ── Password toggle ── */
         function togglePassword() {
             const password = document.getElementById('password');
-            const icon = document.getElementById('toggleIcon');
+            const icon     = document.getElementById('toggleIcon');
+            const btn      = document.getElementById('toggleBtn');
             
             if (password.type === 'password') {
                 password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+                btn.setAttribute('aria-label', 'Hide password');
             } else {
                 password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+                btn.setAttribute('aria-label', 'Show password');
             }
         }
-        
-        // Add animation to form elements
+
+        /* ── Ripple effect ── */
+        document.getElementById('loginBtn').addEventListener('click', function (e) {
+            const btn    = this;
+            const circle = document.createElement('span');
+            const d      = Math.max(btn.clientWidth, btn.clientHeight);
+            const rect   = btn.getBoundingClientRect();
+            circle.classList.add('ripple');
+            circle.style.width  = circle.style.height = d + 'px';
+            circle.style.left   = (e.clientX - rect.left  - d / 2) + 'px';
+            circle.style.top    = (e.clientY - rect.top   - d / 2) + 'px';
+            btn.querySelector('.ripple')?.remove();
+            btn.appendChild(circle);
+        });
+
+        /* ── Client-side validation + loading state ── */
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            const mobileInput   = document.getElementById('mobile');
+            const passwordInput = document.getElementById('password');
+            const mobileError   = document.getElementById('mobileError');
+            const passwordError = document.getElementById('passwordError');
+            let valid = true;
+
+            // Validate mobile
+            if (!/^[0-9]{10}$/.test(mobileInput.value.trim())) {
+                mobileInput.classList.add('invalid');
+                mobileError.classList.add('visible');
+                valid = false;
+            } else {
+                mobileInput.classList.remove('invalid');
+                mobileError.classList.remove('visible');
+            }
+
+            // Validate password
+            if (passwordInput.value.trim() === '') {
+                passwordInput.classList.add('invalid');
+                passwordError.classList.add('visible');
+                valid = false;
+            } else {
+                passwordInput.classList.remove('invalid');
+                passwordError.classList.remove('visible');
+            }
+
+            if (!valid) { e.preventDefault(); return; }
+
+            // Show loading state
+            const btn     = document.getElementById('loginBtn');
+            const spinner = document.getElementById('btnSpinner');
+            const label   = document.getElementById('btnLabel');
+            btn.disabled  = true;
+            btn.classList.add('loading');
+            spinner.style.display = 'block';
+            label.textContent     = 'Signing in…';
+        });
+
+        /* ── Clear inline error on re-type ── */
+        document.getElementById('mobile').addEventListener('input', function () {
+            this.classList.remove('invalid');
+            document.getElementById('mobileError').classList.remove('visible');
+        });
+        document.getElementById('password').addEventListener('input', function () {
+            this.classList.remove('invalid');
+            document.getElementById('passwordError').classList.remove('visible');
+        });
+
+        /* ── Staggered form-group animation ── */
         document.addEventListener('DOMContentLoaded', () => {
-            const formGroups = document.querySelectorAll('.form-group');
-            formGroups.forEach((group, index) => {
-                group.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s forwards`;
-                group.style.opacity = '0';
+            document.querySelectorAll('.form-group').forEach((group, i) => {
+                group.style.opacity   = '0';
+                group.style.animation = `fadeIn 0.5s ease-out ${i * 0.1}s forwards`;
             });
         });
-        // Hide the preloader when the page has fully loaded
-        window.addEventListener("load", function () {
-          const preloader = document.getElementById("preloader");
-          if (preloader) {
-              preloader.style.opacity = '0';
-              preloader.style.transition = 'opacity 0.4s ease-out';
-              setTimeout(() => preloader.style.display = 'none', 400);
-          }
+
+        /* ── Preloader ── */
+        window.addEventListener('load', function () {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.style.opacity    = '0';
+                preloader.style.transition = 'opacity 0.4s ease-out';
+                setTimeout(() => preloader.style.display = 'none', 400);
+            }
         });
     </script>
 </body>
