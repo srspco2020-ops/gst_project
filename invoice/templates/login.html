@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Professional Network</title>
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+DK+Loopet:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary-color: #1e8511;
-            --primary-dark: #315e48;  
+            --primary-dark: #315e48;
             --primary-light: #e4f7e1;
             --text-color: #2d2d2d;
             --text-light: #5e6d55;
@@ -24,14 +24,14 @@
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        
+
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -44,19 +44,17 @@
             background-attachment: fixed;
             position: relative;
         }
-        
+
         body::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.88);
             z-index: 0;
         }
-        
-        .login-container {
+
+        .register-container {
             background-color: var(--card-bg);
             width: 100%;
             max-width: 440px;
@@ -71,42 +69,39 @@
             overflow: hidden;
             margin: 2rem auto;
         }
-        
-        .login-container:hover {
+
+        .register-container:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
         }
-        
-        .login-container::after {
+
+        .register-container::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
             background: linear-gradient(to bottom, var(--primary-color), var(--primary-dark));
-            background-color: var(--primary-color);
         }
-        
-        .login-header {
+
+        .register-header {
             text-align: center;
             margin-bottom: 2.5rem;
         }
-        
-        .login-header h2 {
+
+        .register-header h2 {
             font-size: 2rem;
             font-weight: 700;
             color: var(--text-color);
             margin-bottom: 0.75rem;
             letter-spacing: -0.5px;
         }
-        
-        .login-header p {
+
+        .register-header p {
             color: var(--text-light);
             font-size: 0.95rem;
             line-height: 1.5;
         }
-        
+
         .message {
             background-color: var(--primary-light);
             color: var(--text-color);
@@ -120,23 +115,23 @@
             gap: 10px;
             animation: fadeIn 0.5s ease-out;
         }
-        
+
         .message.error {
             background-color: #ffeeee;
             border-left-color: var(--error-color);
         }
-        
+
         .message.success {
             background-color: #e8f7eb;
             border-left-color: var(--success-color);
         }
-        
+
         /* ── Form group ── */
         .form-group {
             margin-bottom: 1.75rem;
             position: relative;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.75rem;
@@ -161,7 +156,7 @@
             pointer-events: none;
             transition: color 0.2s ease;
         }
-        
+
         .form-group input {
             width: 100%;
             padding: 1rem 1rem 1rem 2.75rem;
@@ -172,19 +167,17 @@
             background-color: var(--bg-color);
         }
 
-        /* Tint the icon when its sibling input is focused */
-        .form-group input:focus ~ .input-icon,
         .input-wrapper:focus-within .input-icon {
             color: var(--primary-color);
         }
-        
+
         .form-group input:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(20, 168, 0, 0.15);
             background-color: white;
         }
-        
+
         .form-group input::placeholder {
             color: #a0a0a0;
             font-weight: 400;
@@ -200,28 +193,26 @@
             animation: fadeIn 0.25s ease-out;
         }
 
-        .field-error.visible {
-            display: block;
-        }
+        .field-error.visible { display: block; }
 
         .form-group input.invalid {
             border-color: var(--error-color);
             box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.12);
         }
-        
+
         /* Password wrapper */
         .password-wrapper {
             position: relative;
             width: 100%;
         }
-        
-        #password {
+
+        .password-wrapper input {
             padding-left: 2.75rem;
             padding-right: 2.75rem;
             width: 100%;
             box-sizing: border-box;
         }
-        
+
         .password-toggle {
             position: absolute;
             right: 12px;
@@ -249,8 +240,8 @@
             outline-offset: 2px;
         }
 
-        /* ── Sign In button ── */
-        .login-btn {
+        /* ── Register button ── */
+        .register-btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -272,18 +263,18 @@
             overflow: hidden;
         }
 
-        .login-btn:hover:not(:disabled) {
+        .register-btn:hover:not(:disabled) {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .login-btn:active:not(:disabled) {
+        .register-btn:active:not(:disabled) {
             transform: translateY(1px) scale(0.98);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
-        .login-btn:disabled {
+        .register-btn:disabled {
             background-color: var(--primary-dark);
             cursor: not-allowed;
             opacity: 0.85;
@@ -299,9 +290,7 @@
             pointer-events: none;
         }
 
-        @keyframes ripple-anim {
-            to { transform: scale(4); opacity: 0; }
-        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
 
         /* Spinner inside button */
         .btn-spinner {
@@ -315,20 +304,20 @@
             display: none;
         }
 
-        .login-btn.loading .btn-spinner { display: block; }
-        .login-btn.loading .btn-label  { opacity: 0.85; }
+        .register-btn.loading .btn-spinner { display: block; }
+        .register-btn.loading .btn-label  { opacity: 0.85; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ── Footer / divider ── */
-        .login-footer {
-            margin-top: 2.5rem;
+        .login-link {
+            margin-top: 2rem;
             text-align: center;
             font-size: 0.95rem;
             color: var(--text-light);
         }
-        
-        .login-link {
+
+        .login-link a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 600;
@@ -336,12 +325,12 @@
             display: inline-block;
             margin-left: 5px;
         }
-        
-        .login-link:hover {
+
+        .login-link a:hover {
             color: var(--primary-dark);
             text-decoration: underline;
         }
-        
+
         .divider {
             display: flex;
             align-items: center;
@@ -349,17 +338,17 @@
             color: var(--text-light);
             font-size: 0.85rem;
         }
-        
+
         .divider::before, .divider::after {
             content: "";
             flex: 1;
             border-bottom: 1px solid var(--border-color);
         }
-        
+
         .divider::before { margin-right: 1rem; }
         .divider::after  { margin-left: 1rem; }
-        
-        /* ── Nav (untouched) ── */
+
+        /* ── Nav ── */
         .nav-gradient {
             background: linear-gradient(to right, #315e48, #1e8511);
             position: sticky;
@@ -367,29 +356,25 @@
             z-index: 100;
             box-shadow: var(--shadow-md);
         }
-        
+
         .nav-container {
             max-width: 100%;
             margin: 0 auto;
             padding: 0 1rem;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        
+
         @media (max-width: 480px) {
-            .login-container {
+            .register-container {
                 padding: 2rem 1.5rem;
                 margin: 1rem;
             }
-            body {
-                background-image: none;
-            }
-            body::before {
-                background: white;
-            }
+            body { background-image: none; }
+            body::before { background: white; }
         }
     </style>
 </head>
@@ -399,7 +384,7 @@
         <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-opacity-50"></div>
     </div>
 
-    <!-- Navigation Bar (untouched) -->
+    <!-- Navigation Bar -->
     <nav class="nav-gradient shadow-lg text-white">
         <div class="nav-container">
             <div class="flex justify-between h-16 items-center">
@@ -407,20 +392,17 @@
                     <i class="fas fa-file-invoice text-white text-2xl"></i>
                     <span class="font-bold text-3xl" style="font-family: 'Poetsen One', sans-serif;">Rekonix</span>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm">{{ cp_name }}</span>
-                </div>
             </div>
         </div>
     </nav>
 
     <main class="flex-grow flex items-center justify-center">
-        <div class="login-container animate__animated animate__fadeIn">
-            <div class="login-header">
-                <h2>Welcome Back</h2>
-                <p>Sign in to access your reconciliation dashboard</p>
+        <div class="register-container animate__animated animate__fadeIn">
+            <div class="register-header">
+                <h2>Create Your Account</h2>
+                <p>Join our platform to access exclusive reconciliation dashboard</p>
             </div>
-            
+
             {% if messages %}
                 {% for message in messages %}
                     <div class="message {% if 'success' in message.tags %}success{% elif 'error' in message.tags %}error{% endif %}">
@@ -432,8 +414,8 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            
-            <form method="post" id="loginForm" novalidate>
+
+            <form method="post" id="registerForm" novalidate>
                 {% csrf_token %}
 
                 <!-- Mobile -->
@@ -448,67 +430,86 @@
                             inputmode="numeric"
                             maxlength="10"
                             pattern="[0-9]{10}"
-                            placeholder="Enter your registered mobile"
+                            placeholder="Enter your mobile number"
                             autofocus
                         >
                         <i class="fa-solid fa-phone input-icon" aria-hidden="true"></i>
                     </div>
                     <span class="field-error" id="mobileError">Please enter a valid 10-digit mobile number.</span>
                 </div>
-                
+
                 <!-- Password -->
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
                         <i class="fa-solid fa-lock input-icon" aria-hidden="true" style="left:14px; z-index:1;"></i>
-                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                        <input type="password" id="password" name="password" required placeholder="Create a password">
                         <button
                             type="button"
                             class="password-toggle"
-                            id="toggleBtn"
-                            onclick="togglePassword()"
+                            id="toggleBtn1"
+                            onclick="togglePassword('password', 'toggleIcon1', 'toggleBtn1')"
                             aria-label="Show password"
                         >
-                            <i class="fa-solid fa-eye" id="toggleIcon"></i>
+                            <i class="fa-solid fa-eye" id="toggleIcon1"></i>
                         </button>
                     </div>
                     <span class="field-error" id="passwordError">Password cannot be empty.</span>
                 </div>
-                
-                <button type="submit" class="login-btn" id="loginBtn">
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <i class="fa-solid fa-lock input-icon" aria-hidden="true" style="left:14px; z-index:1;"></i>
+                        <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="toggleBtn2"
+                            onclick="togglePassword('confirm_password', 'toggleIcon2', 'toggleBtn2')"
+                            aria-label="Show password"
+                        >
+                            <i class="fa-solid fa-eye" id="toggleIcon2"></i>
+                        </button>
+                    </div>
+                    <span class="field-error" id="confirmPasswordError">Passwords do not match.</span>
+                </div>
+
+                <button type="submit" class="register-btn" id="registerBtn">
                     <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
-                    <span class="btn-label" id="btnLabel">Sign In</span>
+                    <span class="btn-label" id="btnLabel">Register Now</span>
                 </button>
             </form>
 
             <div class="divider">or</div>
-            
-            <div class="login-footer">
-                New to our platform? <a href="{% url 'register' %}" class="login-link">Create an account</a>
+
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Sign in here</a>
             </div>
         </div>
     </main>
-    
+
     <script>
         /* ── Password toggle ── */
-        function togglePassword() {
-            const password = document.getElementById('password');
-            const icon     = document.getElementById('toggleIcon');
-            const btn      = document.getElementById('toggleBtn');
-            
-            if (password.type === 'password') {
-                password.type = 'text';
+        function togglePassword(fieldId, iconId, btnId) {
+            const field = document.getElementById(fieldId);
+            const icon  = document.getElementById(iconId);
+            const btn   = document.getElementById(btnId);
+
+            if (field.type === 'password') {
+                field.type = 'text';
                 icon.classList.replace('fa-eye', 'fa-eye-slash');
                 btn.setAttribute('aria-label', 'Hide password');
             } else {
-                password.type = 'password';
+                field.type = 'password';
                 icon.classList.replace('fa-eye-slash', 'fa-eye');
                 btn.setAttribute('aria-label', 'Show password');
             }
         }
 
         /* ── Ripple effect ── */
-        document.getElementById('loginBtn').addEventListener('click', function (e) {
+        document.getElementById('registerBtn').addEventListener('click', function (e) {
             const btn    = this;
             const circle = document.createElement('span');
             const d      = Math.max(btn.clientWidth, btn.clientHeight);
@@ -522,11 +523,13 @@
         });
 
         /* ── Client-side validation + loading state ── */
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
-            const mobileInput   = document.getElementById('mobile');
-            const passwordInput = document.getElementById('password');
-            const mobileError   = document.getElementById('mobileError');
-            const passwordError = document.getElementById('passwordError');
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            const mobileInput          = document.getElementById('mobile');
+            const passwordInput        = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const mobileError          = document.getElementById('mobileError');
+            const passwordError        = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
             let valid = true;
 
             // Validate mobile
@@ -549,19 +552,32 @@
                 passwordError.classList.remove('visible');
             }
 
+            // Validate confirm password
+            if (confirmPasswordInput.value !== passwordInput.value || confirmPasswordInput.value === '') {
+                confirmPasswordInput.classList.add('invalid');
+                confirmPasswordError.classList.add('visible');
+                confirmPasswordError.textContent = confirmPasswordInput.value === ''
+                    ? 'Please confirm your password.'
+                    : 'Passwords do not match.';
+                valid = false;
+            } else {
+                confirmPasswordInput.classList.remove('invalid');
+                confirmPasswordError.classList.remove('visible');
+            }
+
             if (!valid) { e.preventDefault(); return; }
 
             // Show loading state
-            const btn     = document.getElementById('loginBtn');
+            const btn     = document.getElementById('registerBtn');
             const spinner = document.getElementById('btnSpinner');
             const label   = document.getElementById('btnLabel');
             btn.disabled  = true;
             btn.classList.add('loading');
             spinner.style.display = 'block';
-            label.textContent     = 'Signing in…';
+            label.textContent     = 'Registering…';
         });
 
-        /* ── Clear inline error on re-type ── */
+        /* ── Clear inline errors on re-type ── */
         document.getElementById('mobile').addEventListener('input', function () {
             this.classList.remove('invalid');
             document.getElementById('mobileError').classList.remove('visible');
@@ -569,6 +585,10 @@
         document.getElementById('password').addEventListener('input', function () {
             this.classList.remove('invalid');
             document.getElementById('passwordError').classList.remove('visible');
+        });
+        document.getElementById('confirm_password').addEventListener('input', function () {
+            this.classList.remove('invalid');
+            document.getElementById('confirmPasswordError').classList.remove('visible');
         });
 
         /* ── Staggered form-group animation ── */
