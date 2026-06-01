@@ -116,17 +116,19 @@ def register_view(request):
 
 @never_cache
 def login_view(request):
+    # If already logged in, skip login page
+    if request.user.is_authenticated:
+        return redirect('gstin_list')
+    
     if request.method == 'POST':
         mobile = request.POST['mobile']
         password = request.POST['password']
         user = authenticate(request, username=mobile, password=password)
-
         if user is not None:
             login(request, user)
-            return redirect('gstin_list')  # Updated from 'home' to 'dashboard'
+            return redirect('gstin_list')
         else:
             messages.error(request, "Invalid mobile or password.")
-
     return render(request, 'login.html')
 
 
